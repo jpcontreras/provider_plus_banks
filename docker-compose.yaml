@@ -1,14 +1,16 @@
 version: "3.9"
 services:
-  app:
-    image: rubyapp
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWD: example
-      POSTGRES_HOST: db
+  api:
+    build: .
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: puma
     ports:
       - 3000:3000
-  db:
-    image: postgres:alpine3.15
+    depends_on:
+      - db
     environment:
-      POSTGRES_PASSWORD: example
+      DATABASE_URL: postgres://postgres@db
+  db:
+    image: postgres:10.3-alpine
