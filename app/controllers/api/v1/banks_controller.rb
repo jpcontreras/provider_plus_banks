@@ -1,9 +1,13 @@
 class Api::V1::BanksController < ApplicationController
-  before_action :find_bank, only: %i[update destroy]
+  before_action :find_bank, only: %i[show update destroy]
 
   def index
     @banks = Bank.order(name: :desc)
     render json: @banks, status: :ok
+  end
+
+  def show
+    render json: @bank, status: :ok
   end
 
   def create

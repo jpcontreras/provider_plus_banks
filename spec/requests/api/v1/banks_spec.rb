@@ -16,6 +16,22 @@ RSpec.describe 'Api::V1::Banks', type: :request do
     end
   end
 
+  describe 'GET /show' do
+    let!(:bank) { FactoryBot.create(:bank) }
+
+    before do
+      get "/api/v1/banks/#{bank.id}"
+    end
+
+    it 'should return bank Id' do
+      expect(json['id']).to eq(bank.id)
+    end
+
+    it 'should return status code 200' do
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
   describe 'POST /create' do
     context 'with valid parameters' do
       let!(:bank) { FactoryBot.create(:bank) }
