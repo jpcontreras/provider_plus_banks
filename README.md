@@ -15,12 +15,22 @@ docker-compose run --rm api rails db:create db:migrate
 docker-compose run --rm api rails db:test:prepare
 ```
 
+## Run all unit tests
+```bash
+docker-compose run --rm api rspec
+```
+
+## Show all routes
+```bash
+docker-compose run --rm api rails routes
+```
+
 ## How to create models
 ```bash
 docker-compose run --rm api rails g model Joke body:text
 ```
 
-## Run all unit tests
+## How to create controllers
 ```bash
-docker-compose run --rm api rspec
+docker-compose run --rm api rails g controller Joke
 ```
