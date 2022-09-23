@@ -24,7 +24,7 @@ class Api::V1::BanksController < ApplicationController
   end
 
   def update
-    @bank.update(params.permit(:name))
+    @bank.update(bank_params)
     render json: @bank, status: :ok
   end
 
