@@ -49,8 +49,6 @@ RSpec.describe "Api::V1::Providers", type: :request do
       end
 
       it 'should return provider allowed attributes' do
-        puts json
-        puts provider.inspect
         expect(json['id']).to eq(provider.id)
         expect(json['name']).to eq(provider.name)
         expect(json['contact_name']).to eq(provider.contact_name)
@@ -149,6 +147,47 @@ RSpec.describe "Api::V1::Providers", type: :request do
 
       it 'should return a unprocessable entity status' do
         expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
+  describe 'PUT /update' do
+    let!(:provider) { FactoryBot.create(:provider) }
+    let!(:values_updated) {
+      {
+        name: Faker::Name.name,
+        nit: "#{Faker::Number.number(digits: 9)}-#{Faker::Number.number(digits: 1)}",
+        contact_name: Faker::Name.name,
+        contact_cellphone: "#{Faker::Number.number(digits: 10)}",
+        account_number: "#{Faker::Number.number(digits: 15)}"
+      }
+    }
+
+    describe 'Succes Request' do
+      before do
+        put "/api/v1/providers/#{provider.id}", params: values_updated
+      end
+
+      it 'should return provider name updated' do
+        expect(json['name']).to eq(values_updated[:name])
+        expect(json['contact_name']).to eq(values_updated[:contact_name])
+        # expect(json['nit']).to eq(values_updated[:nit])
+        # expect(json['contact_cellphone']).to eq(values_updated[:contact_cellphone])
+        # expect(json['account_number']).to eq(values_updated[:account_number])
+      end
+
+      it 'should return status code 200' do
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe 'Not Found Request' do
+      before do
+        put "/api/v1/providers/777", params: values_updated
+      end
+
+      it 'should return status code 404' do
+        expect(response).to have_http_status(:not_found)
       end
     end
   end

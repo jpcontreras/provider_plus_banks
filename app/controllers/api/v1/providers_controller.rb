@@ -7,7 +7,7 @@ class Api::V1::ProvidersController < ApplicationController
   end
 
   def show
-    if @provider.presence
+    if @provider.present?
       render json: @provider, status: :ok
       return
     end
@@ -21,6 +21,15 @@ class Api::V1::ProvidersController < ApplicationController
     end
   rescue => error
     render_api_error(error, :unprocessable_entity)
+  end
+
+  def update
+    if @provider.present?
+      @provider.update(provider_params)
+      render json: @provider, status: :ok
+      return
+    end
+    render json: {}, status: :not_found
   end
 
   private
