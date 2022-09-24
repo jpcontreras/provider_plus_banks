@@ -1,6 +1,45 @@
 require 'rails_helper'
 
 RSpec.describe "Providers", type: :request do
+  describe 'GET /index' do
+    before do
+      FactoryBot.create_list(:provider, 11)
+      get '/api/v1/providers'
+    end
+
+    it 'should return the id attribute in the list' do
+      expect(json['data'][0]['id'].present?).to eq(true)
+    end
+
+    it 'should return the name attribute in the list' do
+      expect(json['data'][0]['name'].present?).to eq(true)
+    end
+
+    it 'should return the contact name attribute in the list' do
+      expect(json['data'][0]['contact_name'].present?).to eq(true)
+    end
+
+    it 'should return the contact cellphone attribute in the list' do
+      expect(json['data'][0]['contact_cellphone'].present?).to eq(true)
+    end
+
+    it 'should return the bank name attribute in the list' do
+      expect(json['data'][0]['bank_name'].present?).to eq(true)
+    end
+
+    it 'should return the account number attribute in the list' do
+      expect(json['data'][0]['account_number'].present?).to eq(true)
+    end
+
+    it 'should return all providers' do
+      expect(json['data'].size).to eq(11)
+    end
+
+    it 'should return status code 200' do
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe 'POST /create' do
     context 'with valid parameters' do
       let!(:provider) { FactoryBot.create(:provider) }

@@ -1,5 +1,10 @@
 class Api::V1::ProvidersController < ApplicationController
 
+  def index
+    @providers = Provider.order(name: :desc)
+    render_success_pagination_format(@providers, ProviderSerializer)
+  end
+
   def create
     @provider = Provider.new(provider_params)
     if @provider.save!
