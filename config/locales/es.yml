@@ -60,6 +60,11 @@ es:
       messages:
         record_invalid: ! '%{errors}'
       models:
+        bank:
+          attributes:
+            name:
+              blank: no puede estar en blanco
+
         provider:
           attributes:
             name:

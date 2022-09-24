@@ -34,11 +34,14 @@ class Api::V1::ProvidersController < ApplicationController
 
   def update
     if @provider.present?
-      @provider.update(provider_params)
-      render json: @provider, status: :ok
-      return
+      if @provider.update!(provider_params)
+        render json: @provider, status: :ok
+        return
+      end
     end
     render json: {}, status: :not_found
+  rescue => error
+    render_api_error(error, :unprocessable_entity)
   end
 
   private

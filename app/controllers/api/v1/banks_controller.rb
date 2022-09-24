@@ -33,11 +33,14 @@ class Api::V1::BanksController < ApplicationController
 
   def update
     if @bank.present?
-      @bank.update(bank_params)
-      render json: @bank, status: :ok
-      return
+      if @bank.update!(bank_params)
+        render json: @bank, status: :ok
+        return
+      end
     end
     render json: {}, status: :not_found
+  rescue => error
+    render_api_error(error, :unprocessable_entity)
   end
 
   private

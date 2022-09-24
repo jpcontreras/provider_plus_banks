@@ -187,7 +187,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
       }
     }
 
-    describe 'Succes Request' do
+    describe 'with valid parameters' do
       before do
         put "/api/v1/providers/#{provider.id}", params: values_updated
       end
@@ -202,6 +202,35 @@ RSpec.describe "Api::V1::Providers", type: :request do
 
       it 'should return status code 200' do
         expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'with invalid parameters' do
+      let!(:bank) { FactoryBot.create(:bank) }
+      before do
+        put "/api/v1/providers/#{provider.id}", params: {
+          name: '',
+          contact_name: '',
+          bank_id: ''
+        }
+      end
+
+      it 'should return a unprocessable entity errors' do
+        total_errors = json['errors'].count
+        expect(json['errors'].count).to eq(total_errors)
+      end
+
+      it 'should return error: Name, Contact Name and Bank cant be blank' do
+        put "/api/v1/providers/#{provider.id}", params: {
+          name: '',
+          contact_name: '',
+          bank_id: ''
+        }
+        expect(json['errors'].count).to eq(3)
+      end
+
+      it 'should return a unprocessable entity status' do
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
