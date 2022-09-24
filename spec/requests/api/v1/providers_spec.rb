@@ -1,6 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Providers", type: :request do
+  describe 'GET /total' do
+    before do
+      FactoryBot.create_list(:provider, 3)
+      get '/api/v1/providers/total'
+    end
+
+    it 'should return total providers' do
+      expect(json['data']).to eq(3)
+    end
+
+    it 'should return status code 200' do
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe 'GET /index' do
     before do
       FactoryBot.create_list(:provider, 11)

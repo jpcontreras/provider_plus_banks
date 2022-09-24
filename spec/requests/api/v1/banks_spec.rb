@@ -1,6 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Banks', type: :request do
+  describe 'GET /total' do
+    before do
+      FactoryBot.create_list(:bank, 3)
+      get '/api/v1/banks/total'
+    end
+
+    it 'should return total banks' do
+      expect(json['data']).to eq(3)
+    end
+
+    it 'should return status code 200' do
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe 'GET /index' do
     before do
       FactoryBot.create_list(:bank, 3)
