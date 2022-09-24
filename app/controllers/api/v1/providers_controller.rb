@@ -1,6 +1,11 @@
 class Api::V1::ProvidersController < ApplicationController
   before_action :find_provider, only: %i[show update destroy]
 
+  def total
+    @providers = Provider.select('id').all.count
+    render_success_format(@providers)
+  end
+
   def index
     @providers = Provider.with_paginate_10((params[:page] || 1)).order("id desc")
     render_success_pagination_format(@providers, ProviderSerializer)

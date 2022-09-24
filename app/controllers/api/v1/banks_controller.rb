@@ -1,6 +1,11 @@
 class Api::V1::BanksController < ApplicationController
   before_action :find_bank, only: %i[show update destroy]
 
+  def total
+    @banks = Bank.select('id').all.count
+    render_success_format(@banks)
+  end
+
   def index
     @banks = Bank.order(name: :desc)
     render json: @banks, status: :ok

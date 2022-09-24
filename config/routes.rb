@@ -5,8 +5,17 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   namespace :api do
     namespace :v1 do
-      resources :banks, only: [:index, :create, :show, :update, :destroy]
-      resources :providers, only: [:index, :create, :show, :update, :destroy]
+      resources :banks, only: [:index, :create, :show, :update, :destroy] do
+        collection do
+          get :total
+        end
+      end
+
+      resources :providers, only: [:index, :create, :show, :update, :destroy] do
+        collection do
+          get 'total'
+        end
+      end
     end
   end
 end
