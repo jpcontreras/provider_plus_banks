@@ -151,6 +151,30 @@ RSpec.describe "Api::V1::Providers", type: :request do
     end
   end
 
+  describe 'DELETE /destroy' do
+    let!(:provider) { FactoryBot.create(:provider) }
+
+    describe 'Succes Request' do
+      before do
+        delete "/api/v1/providers/#{provider.id}"
+      end
+
+      it 'should return status code 204' do
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+
+    describe 'Not Found Request' do
+      before do
+        delete "/api/v1/providers/777"
+      end
+
+      it 'should return status code 404' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe 'PUT /update' do
     let!(:provider) { FactoryBot.create(:provider) }
     let!(:values_updated) {

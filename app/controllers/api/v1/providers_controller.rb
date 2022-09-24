@@ -23,6 +23,15 @@ class Api::V1::ProvidersController < ApplicationController
     render_api_error(error, :unprocessable_entity)
   end
 
+  def destroy
+    if @provider.present?
+      @provider.delete
+      render json: {}, status: :no_content
+      return
+    end
+    render json: {}, status: :not_found
+  end
+
   def update
     if @provider.present?
       @provider.update(provider_params)

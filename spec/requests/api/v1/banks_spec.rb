@@ -79,12 +79,24 @@ RSpec.describe 'Api::V1::Banks', type: :request do
   describe 'DELETE /destroy' do
     let!(:bank) { FactoryBot.create(:bank) }
 
-    before do
-      delete "/api/v1/banks/#{bank.id}"
+    describe 'Succes Request' do
+      before do
+        delete "/api/v1/banks/#{bank.id}"
+      end
+
+      it 'should return status code 204' do
+        expect(response).to have_http_status(:no_content)
+      end
     end
 
-    it 'should return status code 204' do
-      expect(response).to have_http_status(:no_content)
+    describe 'Not Found Request' do
+      before do
+        delete "/api/v1/banks/777"
+      end
+
+      it 'should return status code 404' do
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 
@@ -92,18 +104,32 @@ RSpec.describe 'Api::V1::Banks', type: :request do
     let!(:bank) { FactoryBot.create(:bank) }
     let!(:bank_name_updated) { 'HoyTrabajas' }
 
-    before do
-      put "/api/v1/banks/#{bank.id}", params: {
-        name: bank_name_updated
-      }
+    describe 'Succes Request' do
+      before do
+        put "/api/v1/banks/#{bank.id}", params: {
+          name: bank_name_updated
+        }
+      end
+
+      it 'should return bank name updated' do
+        expect(json['name']).to eq(bank_name_updated)
+      end
+
+      it 'should return status code 200' do
+        expect(response).to have_http_status(:ok)
+      end
     end
 
-    it 'should return bank name updated' do
-      expect(json['name']).to eq(bank_name_updated)
-    end
+    describe 'Not Found Request' do
+      before do
+        put "/api/v1/banks/777", params: {
+          name: bank_name_updated
+        }
+      end
 
-    it 'should return status code 200' do
-      expect(response).to have_http_status(:ok)
+      it 'should return status code 404' do
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 end

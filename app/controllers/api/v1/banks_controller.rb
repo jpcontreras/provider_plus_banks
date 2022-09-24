@@ -23,13 +23,21 @@ class Api::V1::BanksController < ApplicationController
   end
 
   def destroy
-    @bank.delete
-    render json: '', status: :no_content
+    if @bank.present?
+      @bank.delete
+      render json: {}, status: :no_content
+      return
+    end
+    render json: {}, status: :not_found
   end
 
   def update
-    @bank.update(bank_params)
-    render json: @bank, status: :ok
+    if @bank.present?
+      @bank.update(bank_params)
+      render json: @bank, status: :ok
+      return
+    end
+    render json: {}, status: :not_found
   end
 
   private
