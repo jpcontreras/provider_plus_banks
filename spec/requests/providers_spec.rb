@@ -46,16 +46,28 @@ RSpec.describe "Providers", type: :request do
     end
 
     context 'with invalid parameters' do
+      let!(:bank) { FactoryBot.create(:bank) }
       before do
         post '/api/v1/providers', params: {
           name: '',
-          contact_name: ''
+          contact_name: '',
+          bank_id: ''
         }
       end
 
       it 'should return a unprocessable entity errors' do
         total_errors = json['errors'].count
         expect(json['errors'].count).to eq(total_errors)
+      end
+
+      it 'should return error: Name cant be blank' do
+        post '/api/v1/providers', params: {
+          name: '',
+          contact_name: Faker::Name.name,
+          bank_id: bank.id
+        }
+        puts json['errors']
+        expect(json['errors'].count).to eq(1)
       end
 
       it 'should return a unprocessable entity status' do
