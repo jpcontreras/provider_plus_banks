@@ -6,4 +6,6 @@ class Provider < ApplicationRecord
   validates :account_number, :length => { :maximum => 15 }
 
   belongs_to :bank
+
+  scope :with_paginate_10, lambda { |page| paginate(page: (page || 1), per_page: 10) }
 end

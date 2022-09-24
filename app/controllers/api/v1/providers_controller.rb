@@ -1,7 +1,7 @@
 class Api::V1::ProvidersController < ApplicationController
 
   def index
-    @providers = Provider.order(name: :desc)
+    @providers = Provider.with_paginate_10((params[:page] || 1)).order("id desc")
     render_success_pagination_format(@providers, ProviderSerializer)
   end
 
