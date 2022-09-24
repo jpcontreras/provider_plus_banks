@@ -7,7 +7,11 @@ class Api::V1::BanksController < ApplicationController
   end
 
   def show
-    render json: @bank, status: :ok
+    if @bank.presence
+      render json: @bank, status: :ok
+      return
+    end
+    render json: {}, status: :not_found
   end
 
   def create
@@ -19,13 +23,24 @@ class Api::V1::BanksController < ApplicationController
   end
 
   def destroy
-    @bank.delete
-    render json: '', status: :no_content
+    if @bank.present?
+      @bank.delete
+      render json: {}, status: :no_content
+      return
+    end
+    render json: {}, status: :not_found
   end
 
   def update
-    @bank.update(bank_params)
-    render json: @bank, status: :ok
+    if @bank.present?
+      if @bank.update!(bank_params)
+        render json: @bank, status: :ok
+        return
+      end
+    end
+    render json: {}, status: :not_found
+  rescue => error
+    render_api_error(error, :unprocessable_entity)
   end
 
   private
@@ -34,6 +49,6 @@ class Api::V1::BanksController < ApplicationController
   end
 
   def find_bank
-    @bank = Bank.find(params[:id])
+    @bank = Bank.find_by_id(params[:id])
   end
 end

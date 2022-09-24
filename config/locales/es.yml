@@ -34,6 +34,9 @@ es:
     models:
       provider:
         created: Proveedor creado correctamente.
+    attributes:
+      provider:
+        blank: Sin información en la tabla
 
   activerecord:
     models:
@@ -57,6 +60,11 @@ es:
       messages:
         record_invalid: ! '%{errors}'
       models:
+        bank:
+          attributes:
+            name:
+              blank: no puede estar en blanco
+
         provider:
           attributes:
             name:
