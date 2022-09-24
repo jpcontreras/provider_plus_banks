@@ -40,6 +40,41 @@ RSpec.describe "Api::V1::Providers", type: :request do
     end
   end
 
+  describe 'GET /show' do
+    let!(:provider) { FactoryBot.create(:provider) }
+
+    describe 'Succes Request' do
+      before do
+        get "/api/v1/providers/#{provider.id}"
+      end
+
+      it 'should return provider allowed attributes' do
+        puts json
+        puts provider.inspect
+        expect(json['id']).to eq(provider.id)
+        expect(json['name']).to eq(provider.name)
+        expect(json['contact_name']).to eq(provider.contact_name)
+        expect(json['bank_name']).to eq(provider.bank.name)
+        # expect(json['contact_cellphone']).to eq(provider.contact_cellphone)
+        # expect(json['account_number']).to eq(provider.account_number)
+      end
+
+      it 'should return status code 200' do
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe 'Not Found Request' do
+      before do
+        get "/api/v1/providers/777"
+      end
+
+      it 'should return status code 404' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe 'POST /create' do
     context 'with valid parameters' do
       let!(:provider) { FactoryBot.create(:provider) }

@@ -19,16 +19,28 @@ RSpec.describe 'Api::V1::Banks', type: :request do
   describe 'GET /show' do
     let!(:bank) { FactoryBot.create(:bank) }
 
-    before do
-      get "/api/v1/banks/#{bank.id}"
+    describe 'Succes Request' do
+      before do
+        get "/api/v1/banks/#{bank.id}"
+      end
+
+      it 'should return bank Id' do
+        expect(json['id']).to eq(bank.id)
+      end
+
+      it 'should return status code 200' do
+        expect(response).to have_http_status(:ok)
+      end
     end
 
-    it 'should return bank Id' do
-      expect(json['id']).to eq(bank.id)
-    end
+    describe 'Not Found Request' do
+      before do
+        get "/api/v1/banks/777"
+      end
 
-    it 'should return status code 200' do
-      expect(response).to have_http_status(:ok)
+      it 'should return status code 404' do
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 

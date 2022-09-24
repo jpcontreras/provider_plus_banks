@@ -7,7 +7,11 @@ class Api::V1::BanksController < ApplicationController
   end
 
   def show
-    render json: @bank, status: :ok
+    if @bank.presence
+      render json: @bank, status: :ok
+      return
+    end
+    render json: {}, status: :not_found
   end
 
   def create
@@ -34,6 +38,6 @@ class Api::V1::BanksController < ApplicationController
   end
 
   def find_bank
-    @bank = Bank.find(params[:id])
+    @bank = Bank.find_by_id(params[:id])
   end
 end
