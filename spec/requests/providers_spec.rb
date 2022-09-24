@@ -17,27 +17,31 @@ RSpec.describe "Providers", type: :request do
       end
 
       it 'should return the provider name' do
-        expect(json['name']).to eq(provider.name)
+        expect(json['data']['name']).to eq(provider.name)
       end
 
       it 'should return the provider nit' do
-        expect(json['nit']).to eq(provider.nit)
+        expect(json['data']['nit']).to eq(provider.nit)
       end
 
       it 'should return the provider contact name' do
-        expect(json['contact_name']).to eq(provider.contact_name)
+        expect(json['data']['contact_name']).to eq(provider.contact_name)
       end
 
       it 'should return the provider contact cellphone' do
-        expect(json['contact_cellphone']).to eq(provider.contact_cellphone)
+        expect(json['data']['contact_cellphone']).to eq(provider.contact_cellphone)
       end
 
       it 'should return the provider account number' do
-        expect(json['account_number']).to eq(provider.account_number)
+        expect(json['data']['account_number']).to eq(provider.account_number)
       end
 
       it 'should return the provider bank ID' do
-        expect(json['bank_id']).to eq(provider.bank.id)
+        expect(json['data']['bank_id']).to eq(provider.bank.id)
+      end
+
+      it 'should return success message when all attributes are valid' do
+        expect(json['message']).to eq(I18n.t('messages.models.provider.created'))
       end
 
       it 'should return a created status' do
@@ -66,7 +70,6 @@ RSpec.describe "Providers", type: :request do
           contact_name: Faker::Name.name,
           bank_id: bank.id
         }
-        puts json['errors']
         expect(json['errors'].count).to eq(1)
       end
 

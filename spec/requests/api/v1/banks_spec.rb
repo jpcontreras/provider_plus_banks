@@ -59,7 +59,6 @@ RSpec.describe 'Api::V1::Banks', type: :request do
       end
 
       it 'should return a unprocessable entity status' do
-        puts response
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end

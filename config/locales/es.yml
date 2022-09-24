@@ -30,6 +30,11 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 es:
+  messages:
+    models:
+      provider:
+        created: Proveedor creado correctamente.
+
   activerecord:
     models:
       bank:
@@ -50,7 +55,7 @@ es:
         bank: Banco
     errors:
       messages:
-        record_invalid: ! 'La validación falló: %{errors}'
+        record_invalid: ! '%{errors}'
       models:
         provider:
           attributes:
