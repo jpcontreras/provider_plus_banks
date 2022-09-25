@@ -1,4 +1,4 @@
-class Api::V1::ProvidersController < ApplicationController
+class Api::V1::ProvidersController < AuthorizeController
   before_action :find_provider, only: %i[show update destroy]
 
   def total

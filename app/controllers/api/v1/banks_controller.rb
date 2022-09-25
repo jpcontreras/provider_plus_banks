@@ -1,4 +1,4 @@
-class Api::V1::BanksController < ApplicationController
+class Api::V1::BanksController < AuthorizeController
   before_action :find_bank, only: %i[show update destroy]
 
   def total
