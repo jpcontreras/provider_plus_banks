@@ -1,4 +1,4 @@
-class Api::V1::BanksController < ApplicationController
+class Api::V1::BanksController < AuthorizeController
   before_action :find_bank, only: %i[show update destroy]
 
   def total
@@ -8,11 +8,11 @@ class Api::V1::BanksController < ApplicationController
 
   def index
     @banks = Bank.order(name: :desc)
-    render json: @banks, status: :ok
+    render_success_format(@banks)
   end
 
   def show
-    if @bank.presence
+    if @bank.present?
       render json: @bank, status: :ok
       return
     end
@@ -21,10 +21,11 @@ class Api::V1::BanksController < ApplicationController
 
   def create
     @bank = Bank.new(bank_params)
-    @bank.save!
-    render json: @bank, status: :created
+    if @bank.save!
+      render_success_format(@bank, I18n.t('messages.models.bank.created'), :created)
+    end
   rescue => error
-    render json: error.message, status: :unprocessable_entity
+    render_api_error(error, :unprocessable_entity)
   end
 
   def destroy

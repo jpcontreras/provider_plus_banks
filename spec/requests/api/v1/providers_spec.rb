@@ -4,7 +4,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
   describe 'GET /total' do
     before do
       FactoryBot.create_list(:provider, 3)
-      get '/api/v1/providers/total'
+      get '/api/v1/providers/total', headers: create_auth_headers
     end
 
     it 'should return total providers' do
@@ -19,7 +19,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
   describe 'GET /index' do
     before do
       FactoryBot.create_list(:provider, 11)
-      get '/api/v1/providers'
+      get '/api/v1/providers', headers: create_auth_headers
     end
 
     it 'should return the id attribute in the list' do
@@ -34,17 +34,9 @@ RSpec.describe "Api::V1::Providers", type: :request do
       expect(json['data'][0]['contact_name'].present?).to eq(true)
     end
 
-    # it 'should return the contact cellphone attribute in the list' do
-    #   expect(json['data'][0]['contact_cellphone'].present?).to eq(true)
-    # end
-
     it 'should return the bank name attribute in the list' do
       expect(json['data'][0]['bank_name'].present?).to eq(true)
     end
-
-    # it 'should return the account number attribute in the list' do
-    #   expect(json['data'][0]['account_number'].present?).to eq(true)
-    # end
 
     it 'should return all providers rows allowed' do
       expect(json['data'].size).to eq(10)
@@ -60,7 +52,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
 
     describe 'Succes Request' do
       before do
-        get "/api/v1/providers/#{provider.id}"
+        get "/api/v1/providers/#{provider.id}", headers: create_auth_headers
       end
 
       it 'should return provider allowed attributes' do
@@ -68,8 +60,6 @@ RSpec.describe "Api::V1::Providers", type: :request do
         expect(json['name']).to eq(provider.name)
         expect(json['contact_name']).to eq(provider.contact_name)
         expect(json['bank_name']).to eq(provider.bank.name)
-        # expect(json['contact_cellphone']).to eq(provider.contact_cellphone)
-        # expect(json['account_number']).to eq(provider.account_number)
       end
 
       it 'should return status code 200' do
@@ -79,7 +69,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
 
     describe 'Not Found Request' do
       before do
-        get "/api/v1/providers/777"
+        get "/api/v1/providers/777", headers: create_auth_headers
       end
 
       it 'should return status code 404' do
@@ -93,7 +83,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
       let!(:provider) { FactoryBot.create(:provider) }
 
       before do
-        post '/api/v1/providers', params: {
+        post '/api/v1/providers', headers: create_auth_headers, params: {
           name: provider.name,
           nit: provider.nit,
           contact_name: provider.contact_name,
@@ -139,7 +129,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
     context 'with invalid parameters' do
       let!(:bank) { FactoryBot.create(:bank) }
       before do
-        post '/api/v1/providers', params: {
+        post '/api/v1/providers', headers: create_auth_headers, params: {
           name: '',
           contact_name: '',
           bank_id: ''
@@ -152,7 +142,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
       end
 
       it 'should return error: Name cant be blank' do
-        post '/api/v1/providers', params: {
+        post '/api/v1/providers', headers: create_auth_headers, params: {
           name: '',
           contact_name: Faker::Name.name,
           bank_id: bank.id
@@ -171,7 +161,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
 
     describe 'Succes Request' do
       before do
-        delete "/api/v1/providers/#{provider.id}"
+        delete "/api/v1/providers/#{provider.id}", headers: create_auth_headers
       end
 
       it 'should return status code 204' do
@@ -181,7 +171,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
 
     describe 'Not Found Request' do
       before do
-        delete "/api/v1/providers/777"
+        delete "/api/v1/providers/777", headers: create_auth_headers
       end
 
       it 'should return status code 404' do
@@ -204,15 +194,12 @@ RSpec.describe "Api::V1::Providers", type: :request do
 
     describe 'with valid parameters' do
       before do
-        put "/api/v1/providers/#{provider.id}", params: values_updated
+        put "/api/v1/providers/#{provider.id}", headers: create_auth_headers, params: values_updated
       end
 
       it 'should return provider name updated' do
         expect(json['name']).to eq(values_updated[:name])
         expect(json['contact_name']).to eq(values_updated[:contact_name])
-        # expect(json['nit']).to eq(values_updated[:nit])
-        # expect(json['contact_cellphone']).to eq(values_updated[:contact_cellphone])
-        # expect(json['account_number']).to eq(values_updated[:account_number])
       end
 
       it 'should return status code 200' do
@@ -223,7 +210,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
     context 'with invalid parameters' do
       let!(:bank) { FactoryBot.create(:bank) }
       before do
-        put "/api/v1/providers/#{provider.id}", params: {
+        put "/api/v1/providers/#{provider.id}", headers: create_auth_headers, params: {
           name: '',
           contact_name: '',
           bank_id: ''
@@ -236,7 +223,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
       end
 
       it 'should return error: Name, Contact Name and Bank cant be blank' do
-        put "/api/v1/providers/#{provider.id}", params: {
+        put "/api/v1/providers/#{provider.id}", headers: create_auth_headers, params: {
           name: '',
           contact_name: '',
           bank_id: ''
@@ -251,7 +238,7 @@ RSpec.describe "Api::V1::Providers", type: :request do
 
     describe 'Not Found Request' do
       before do
-        put "/api/v1/providers/777", params: values_updated
+        put "/api/v1/providers/777", headers: create_auth_headers, params: values_updated
       end
 
       it 'should return status code 404' do

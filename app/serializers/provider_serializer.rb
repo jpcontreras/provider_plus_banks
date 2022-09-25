@@ -9,11 +9,8 @@ class ProviderSerializer < ActiveModel::Serializer
     self.is_field_blank?(object.account_number)
   end
 
-  def bank_name
-    object.bank.name if object.bank.present?
-  end
-
   private
+
   def is_field_blank?(field)
     I18n.t('messages.attributes.provider.blank') if field.blank?
   end

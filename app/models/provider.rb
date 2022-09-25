@@ -8,4 +8,8 @@ class Provider < ApplicationRecord
   belongs_to :bank
 
   scope :with_paginate_10, lambda { |page| paginate(page: (page || 1), per_page: 10) }
+
+  def bank_name
+    self.bank.name if self.bank.present?
+  end
 end

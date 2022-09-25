@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  devise_for :users, skip: %i[registrations sessions passwords]
+  devise_scope :user do
+    post 'auth/sign_up', to: 'registrations#create'
+    post 'auth/sign_in', to: 'sessions#create'
+    delete 'auth/sign_out', to: 'sessions#destroy'
+  end
   # Defines the root path route ("/")
   root to: 'health#check'
 

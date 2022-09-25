@@ -4,7 +4,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
   describe 'GET /total' do
     before do
       FactoryBot.create_list(:bank, 3)
-      get '/api/v1/banks/total'
+      get '/api/v1/banks/total', headers: create_auth_headers
     end
 
     it 'should return total banks' do
@@ -19,7 +19,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
   describe 'GET /index' do
     before do
       FactoryBot.create_list(:bank, 3)
-      get '/api/v1/banks'
+      get '/api/v1/banks', headers: create_auth_headers
     end
 
     it 'should return all banks' do
@@ -36,7 +36,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
 
     describe 'Succes Request' do
       before do
-        get "/api/v1/banks/#{bank.id}"
+        get "/api/v1/banks/#{bank.id}", headers: create_auth_headers
       end
 
       it 'should return bank Id' do
@@ -50,7 +50,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
 
     describe 'Not Found Request' do
       before do
-        get "/api/v1/banks/777"
+        get "/api/v1/banks/777", headers: create_auth_headers
       end
 
       it 'should return status code 404' do
@@ -65,12 +65,12 @@ RSpec.describe 'Api::V1::Banks', type: :request do
       
       before do
         post '/api/v1/banks', params: {
-          name: bank.name
-        }
+          name:  bank.name
+        }, headers: create_auth_headers
       end
 
       it 'should return the bank name' do
-        expect(json['name']).to eq(bank.name)
+        expect(json['data']['name']).to eq(bank.name)
       end
 
       it 'should return a created status' do
@@ -80,7 +80,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
 
     context 'with invalid parameters' do
       before do
-        post '/api/v1/banks', params: {
+        post '/api/v1/banks', headers: create_auth_headers, params: {
           name: ''
         }
       end
@@ -96,7 +96,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
 
     describe 'Succes Request' do
       before do
-        delete "/api/v1/banks/#{bank.id}"
+        delete "/api/v1/banks/#{bank.id}", headers: create_auth_headers
       end
 
       it 'should return status code 204' do
@@ -106,7 +106,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
 
     describe 'Not Found Request' do
       before do
-        delete "/api/v1/banks/777"
+        delete "/api/v1/banks/777", headers: create_auth_headers
       end
 
       it 'should return status code 404' do
@@ -121,7 +121,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
 
     describe 'Succes Request' do
       before do
-        put "/api/v1/banks/#{bank.id}", params: {
+        put "/api/v1/banks/#{bank.id}", headers: create_auth_headers, params: {
           name: bank_name_updated
         }
       end
@@ -137,7 +137,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
 
     describe 'Not Found Request' do
       before do
-        put "/api/v1/banks/777", params: {
+        put "/api/v1/banks/777", headers: create_auth_headers, params: {
           name: bank_name_updated
         }
       end
