@@ -40,7 +40,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
       end
 
       it 'should return bank Id' do
-        expect(json['id']).to eq(bank.id)
+        expect(json['data']['id']).to eq(bank.id)
       end
 
       it 'should return status code 200' do
@@ -127,7 +127,7 @@ RSpec.describe 'Api::V1::Banks', type: :request do
       end
 
       it 'should return bank name updated' do
-        expect(json['name']).to eq(bank_name_updated)
+        expect(json['data']['name']).to eq(bank_name_updated)
       end
 
       it 'should return status code 200' do
