@@ -34,6 +34,9 @@ es:
     models:
       user:
         created: Usuario registrado correctamente.
+        sign_in:
+          success: Usuario logueado correctamente.
+          wrong: Usuario o contraseña incorrecta.
       bank:
         created: Banco registrado correctamente.
       provider:
