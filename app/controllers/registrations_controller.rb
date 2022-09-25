@@ -3,7 +3,10 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     build_resource(sign_up_params)
-    resource.save
-    render json: resource, status: :created
+    if resource.save!
+      render_success_format(resource, I18n.t('messages.models.user.created'), :created)
+    end
+  rescue => error
+    render_api_error(error, :unprocessable_entity)
   end
 end

@@ -32,6 +32,8 @@
 es:
   messages:
     models:
+      user:
+        created: Usuario registrado correctamente.
       provider:
         created: Proveedor creado correctamente.
     attributes:
@@ -40,6 +42,9 @@ es:
 
   activerecord:
     models:
+      user:
+        one: Usuario
+        other: Usuarios
       bank:
         one: Banco
         other: Bancos
@@ -47,6 +52,9 @@ es:
         one: Proveedor
         other: Proveedores
     attributes:
+      user:
+        email: Correo electronico
+        password: Contraseña
       bank:
         name: Nombre
       provider:
@@ -60,11 +68,17 @@ es:
       messages:
         record_invalid: ! '%{errors}'
       models:
+        user:
+          attributes:
+            email:
+              blank: no puede estar en blanco
+              taken: ya esta siendo utilizado
+            password:
+              blank: no puede estar en blanco
         bank:
           attributes:
             name:
               blank: no puede estar en blanco
-
         provider:
           attributes:
             name:
