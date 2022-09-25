@@ -17,33 +17,60 @@ RSpec.describe "Api::V1::Providers", type: :request do
   end
 
   describe 'GET /index' do
-    before do
-      FactoryBot.create_list(:provider, 11)
-      get '/api/v1/providers', headers: create_auth_headers
+    describe 'Register Details' do
+      before do
+        FactoryBot.create_list(:provider, 11)
+        get '/api/v1/providers', headers: create_auth_headers
+      end
+
+      it 'should return the id attribute in the list' do
+        expect(json['data'][0]['id'].present?).to eq(true)
+      end
+
+      it 'should return the name attribute in the list' do
+        expect(json['data'][0]['name'].present?).to eq(true)
+      end
+
+      it 'should return the contact name attribute in the list' do
+        expect(json['data'][0]['contact_name'].present?).to eq(true)
+      end
+
+      it 'should return the bank name attribute in the list' do
+        expect(json['data'][0]['bank_name'].present?).to eq(true)
+      end
+
+      it 'should return status code 200' do
+        expect(response).to have_http_status(:success)
+      end
     end
 
-    it 'should return the id attribute in the list' do
-      expect(json['data'][0]['id'].present?).to eq(true)
-    end
+    describe 'Page Details' do
+      let!(:total_rows) { 11 }
 
-    it 'should return the name attribute in the list' do
-      expect(json['data'][0]['name'].present?).to eq(true)
-    end
+      before do
+        FactoryBot.create_list(:provider, total_rows)
+        get '/api/v1/providers', headers: create_auth_headers
+      end
 
-    it 'should return the contact name attribute in the list' do
-      expect(json['data'][0]['contact_name'].present?).to eq(true)
-    end
+      it 'should return current default page' do
+        expect(json['pagination']['current_page']).to eq(1)
+      end
 
-    it 'should return the bank name attribute in the list' do
-      expect(json['data'][0]['bank_name'].present?).to eq(true)
-    end
+      it 'should return total pages' do
+        result = total_rows.to_f / Provider::MAX_ROWS_BY_PAGE.to_f
+        total_pages = result.integer? ? result : result.round().next
+        expect(json['pagination']['total_pages']).to eq(total_pages)
+      end
 
-    it 'should return all providers rows allowed' do
-      expect(json['data'].size).to eq(10)
-    end
+      it 'should return nil value in previous page' do
+        expect(json['pagination']['previous_page']).to eq(nil)
+      end
 
-    it 'should return status code 200' do
-      expect(response).to have_http_status(:success)
+      it 'should return two value in next page' do
+        result = total_rows.to_f / Provider::MAX_ROWS_BY_PAGE.to_f
+        total_pages = result.integer? ? result : result.round().next
+        expect(json['pagination']['next_page']).to eq(total_pages)
+      end
     end
   end
 
@@ -56,10 +83,10 @@ RSpec.describe "Api::V1::Providers", type: :request do
       end
 
       it 'should return provider allowed attributes' do
-        expect(json['id']).to eq(provider.id)
-        expect(json['name']).to eq(provider.name)
-        expect(json['contact_name']).to eq(provider.contact_name)
-        expect(json['bank_name']).to eq(provider.bank.name)
+        expect(json['data']['id']).to eq(provider.id)
+        expect(json['data']['name']).to eq(provider.name)
+        expect(json['data']['contact_name']).to eq(provider.contact_name)
+        expect(json['data']['bank_name']).to eq(provider.bank.name)
       end
 
       it 'should return status code 200' do
@@ -198,8 +225,8 @@ RSpec.describe "Api::V1::Providers", type: :request do
       end
 
       it 'should return provider name updated' do
-        expect(json['name']).to eq(values_updated[:name])
-        expect(json['contact_name']).to eq(values_updated[:contact_name])
+        expect(json['data']['name']).to eq(values_updated[:name])
+        expect(json['data']['contact_name']).to eq(values_updated[:contact_name])
       end
 
       it 'should return status code 200' do
