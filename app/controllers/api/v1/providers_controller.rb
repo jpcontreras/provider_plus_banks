@@ -1,60 +1,36 @@
 class Api::V1::ProvidersController < AuthorizeController
-  before_action :find_provider, only: %i[show update destroy]
-
   def total
-    @providers = Provider.select('id').all.count
-    render_success_format(@providers)
+    result = Provider::CountInteractor.call()
+    render_interactor(result)
   end
 
   def index
-    @providers = Provider.with_paginate_10((params[:page] || 1)).order("id desc")
-    render_success_pagination_format(@providers, ProviderSerializer)
+    result = Provider::ListInteractor.call({page: params[:page]})
+    render_success_pagination_format(result.data, ProviderSerializer)
   end
 
   def show
-    if @provider.present?
-      render json: @provider, status: :ok
-      return
-    end
-    render json: {}, status: :not_found
+    result = Provider::ShowInteractor.call({ id: params[:id] })
+    render_interactor(result, ProviderSerializer)
   end
 
   def create
-    @provider = Provider.new(provider_params)
-    if @provider.save!
-      render_success_format(@provider, I18n.t('messages.models.provider.created'), :created)
-    end
-  rescue => error
-    render_api_error(error, :unprocessable_entity)
+    result = Provider::CreateInteractor.call({ provider_params: provider_params })
+    render_interactor(result)
   end
 
   def destroy
-    if @provider.present?
-      @provider.delete
-      render json: {}, status: :no_content
-      return
-    end
-    render json: {}, status: :not_found
+    result = Provider::DestroyInteractor.call({ id: params[:id] })
+    render_interactor(result)
   end
 
   def update
-    if @provider.present?
-      if @provider.update!(provider_params)
-        render json: @provider, status: :ok
-        return
-      end
-    end
-    render json: {}, status: :not_found
-  rescue => error
-    render_api_error(error, :unprocessable_entity)
+    result = Provider::UpdateInteractor.call({ id: params[:id], provider_params: provider_params })
+    render_interactor(result)
   end
 
   private
   def provider_params
     params.permit(:name, :nit, :contact_name, :contact_cellphone, :account_number, :bank_id)
-  end
-
-  def find_provider
-    @provider = Provider.find_by_id(params[:id])
   end
 end
