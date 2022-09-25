@@ -34,6 +34,8 @@ es:
     models:
       user:
         created: Usuario registrado correctamente.
+      bank:
+        created: Banco registrado correctamente.
       provider:
         created: Proveedor creado correctamente.
     attributes:
